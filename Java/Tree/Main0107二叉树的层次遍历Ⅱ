@@ -1,0 +1,58 @@
+package tree;
+
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
+
+public class Main0107二叉树的层次遍历Ⅱ {
+	public static void main(String[] args) {
+
+	}
+}
+
+class Solution0107 {
+	List<List<Integer>> output = new ArrayList<>();
+
+	public List<List<Integer>> levelOrderBottom(TreeNode root) {
+		if (root == null)
+			return output;
+		helper(root, 0);
+		return output;
+	}
+
+	private void helper(TreeNode root, int level) {
+		if (output.size() <= level)
+			output.add(0, new ArrayList<>());
+		output.get(output.size() - 1 - level).add(root.val);
+		if (root.left != null)
+			helper(root.left, level + 1);
+		if (root.right != null)
+			helper(root.right, level + 1);
+	}
+}
+
+// 迭代
+class Solution107 {
+	public List<List<Integer>> levelOrderBottom(TreeNode root) {
+		List<List<Integer>> output = new ArrayList<>();
+		if (root == null)
+			return output;
+		
+		Queue<TreeNode> queue = new LinkedList<>();
+		queue.add(root);
+		while (!queue.isEmpty()) {
+			output.add(0, new ArrayList<>());// 新建list首部
+			int length = queue.size();
+			for (int i = 0; i < length; i++) {
+				TreeNode cur = queue.poll();
+				output.get(0).add(cur.val);
+				if(cur.left != null)
+					queue.add(cur.left);
+				if(cur.right != null)
+					queue.add(cur.right);
+			}
+		}
+		return output;
+	}
+}
