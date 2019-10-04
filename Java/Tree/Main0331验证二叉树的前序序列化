@@ -1,0 +1,62 @@
+package tree;
+
+import java.util.LinkedList;
+import java.util.Queue;
+// 331验证二叉树的前序序列化、297二叉树的序列化和反序列化、449序列化和反序列化二叉搜索树、
+// 层序序列化和反序列化
+public class Main0331验证二叉树的前序序列化 {
+	public static void main(String[] args) {
+		// 验证前序序列化
+		System.out.println(new Solution331().isValidSerialization("1,2,3,#,#,#,#"));
+		TreeNode root = new TreeNode(1);
+		TreeNode node1 = new TreeNode(2);
+		TreeNode node2 = new TreeNode(3);
+		root.left = node1;
+		root.right = node2;
+		// 层序序列化
+		System.out.println("层序序列化:" + serialize(root));
+	}
+
+	// 层序序列化
+	public static String serialize(TreeNode root) {
+		String res = "";
+		if (root == null)
+			return res;
+
+		Queue<TreeNode> queue = new LinkedList<>();
+		queue.add(root);
+		res += root.val + ",";
+		while (!queue.isEmpty()) {
+			TreeNode cur = queue.poll();
+			if (cur.left != null) {
+				res += cur.left.val + ",";
+				queue.add(cur.left);
+			} else {
+				res += "#,";
+			}
+			if (cur.right != null) {
+				res += cur.right.val + ",";
+				queue.add(cur.right);
+			} else {
+				res += "#,";
+			}
+		}
+		return res;
+	}
+}
+
+class Solution331 {
+	public boolean isValidSerialization(String preorder) {
+		String[] str = preorder.split(",");
+		int count = 1;
+		for (int i = 0; i < str.length; i++) {
+			if (count == 0) // 1,#,#,1
+				return false;
+			else if (str[i].equals("#"))
+				count--;
+			else
+				count++;
+		}
+		return count == 0;
+	}
+}
