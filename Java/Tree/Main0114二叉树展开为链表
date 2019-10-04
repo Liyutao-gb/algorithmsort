@@ -1,0 +1,50 @@
+package tree;
+
+import java.util.Stack;
+
+// 114二叉树展开为链表、108将有序数组转化为二叉搜索树、109将有序链表转化为二叉搜索树
+// 897二叉搜索树展开为链表
+public class Main0114二叉树展开为链表 {
+	public static void main(String[] args) {
+
+	}
+}
+
+// 自底向上
+class Solution114 {
+	TreeNode pre = null;
+
+	public void flatten(TreeNode root) {
+		if (root == null)
+			return;
+		flatten(root.right);
+		flatten(root.left);
+		root.right = pre;
+		root.left = null;
+		pre = root;
+	}
+}
+
+// 自顶向下(先序遍历)
+class Solution0114 {
+	public void flatten(TreeNode root) {
+		if (root == null)
+			return;
+
+		Stack<TreeNode> stack = new Stack<>();
+		stack.push(root);
+		TreeNode pre = null;
+		while (!stack.isEmpty()) {
+			TreeNode cur = stack.pop();
+			if (pre != null) {
+				pre.right = cur;
+				pre.left = null;
+			}
+			if (cur.right != null)
+				stack.push(cur.right);
+			if (cur.left != null)
+				stack.push(cur.left);
+			pre = cur;
+		}
+	}
+}
