@@ -1,0 +1,32 @@
+package tree;
+
+// 112路径总和、113路径总和Ⅱ、257二叉树的所有路径、129从根节点到叶子结点数字之和
+public class Main0112路径总和 {
+	public static void main(String[] args) {
+		TreeNode root = new TreeNode(5);
+		TreeNode node1 = new TreeNode(4);
+		TreeNode node2 = new TreeNode(8);
+		TreeNode node3 = new TreeNode(11);
+		TreeNode node6 = new TreeNode(7);
+		TreeNode node7 = new TreeNode(2);
+		root.left = node1;
+		root.right = node2;
+		node1.left = node3;
+		node3.left = node6;
+		node3.right = node7;
+		boolean b = new Solution112().hasPathSum(root, 22);
+		System.out.println(b);
+	}
+}
+
+class Solution112 {
+	public boolean hasPathSum(TreeNode root, int sum) {
+		if (root == null)
+			return false;
+
+		sum -= root.val;
+		if (root.left == null && root.right == null)
+			return sum == 0;
+		return hasPathSum(root.left, sum) || hasPathSum(root.right, sum);
+	}
+}
