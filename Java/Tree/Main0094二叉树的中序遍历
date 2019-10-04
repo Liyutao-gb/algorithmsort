@@ -1,0 +1,71 @@
+package tree;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Stack;
+
+// 94中序、144前序、145后序遍历、671二叉树第二小的结点值、230二叉搜索树中第k小元素
+// 938二叉搜索树的范围和、538二叉搜索树转化为累加树、513找左下角的值
+public class Main0094二叉树的中序遍历 {
+	public static void main(String[] args) {
+		TreeNode root = new TreeNode(1);
+		TreeNode node1 = new TreeNode(2);
+		TreeNode node2 = new TreeNode(3);
+		root.right = node1;
+		node1.left = node2;
+		List<Integer> list = new Solution094().inorderTraversal(root);
+		System.out.println(list);
+	}
+}
+
+// 迭代
+class Solution094 {
+	public List<Integer> inorderTraversal(TreeNode root) {
+		List<Integer> output = new ArrayList<>();
+		if (root == null)
+			return output;
+		
+		Stack<TreeNode> stack = new Stack<>();
+		TreeNode cur = root;
+		while (cur != null || !stack.isEmpty()) {
+			while (cur != null) {
+				stack.push(cur);
+				cur = cur.left;
+			}
+			cur = stack.pop();
+			output.add(cur.val);
+			cur = cur.right;
+		}
+		return output;
+	}
+}
+
+// 递归
+class Solution94 {
+	public List<Integer> inorderTraversal(TreeNode root) {
+		List<Integer> list = new ArrayList<>();
+		inorderTraversal(root, list);
+		return list;
+	}
+
+	public void inorderTraversal(TreeNode root, List<Integer> list) {
+		if (root == null)
+			return;
+		inorderTraversal(root.left, list);
+		list.add(root.val);
+		inorderTraversal(root.right, list);
+	}
+}
+
+class Solution0094 {
+	List<Integer> list = new ArrayList<>();
+
+	public List<Integer> inorderTraversal(TreeNode root) {
+		if (root == null)
+			return list;
+		inorderTraversal(root.left);
+		list.add(root.val);
+		inorderTraversal(root.right);
+		return list;
+	}
+}
