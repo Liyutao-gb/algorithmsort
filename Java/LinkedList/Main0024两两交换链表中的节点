@@ -1,0 +1,50 @@
+package linkedlist;
+
+public class Main0024两两交换链表中的节点 {
+	public static void main(String[] args) {
+		ListNode head = new ListNode(1);
+		ListNode node = new ListNode(2);
+		ListNode node1 = new ListNode(2);
+		ListNode node2 = new ListNode(2);
+		head.next = node;
+		node.next = node1;
+		node1.next = node2;
+		ListNode pairs = new Solution024().swapPairs(head);
+		while (pairs != null) {
+			System.out.print(pairs.val + " ");
+			pairs = pairs.next;
+		}
+	}
+}
+
+// 递归
+class Solution24 {
+	public ListNode swapPairs(ListNode head) {
+		if (head == null || head.next == null)
+			return head;
+            
+		// 三个节点顺序:head, next, swapPairs(next.next)
+		ListNode next = head.next;          // 先保留next,再让head指向swapPairs(next.next),最后让next.next指向head
+		head.next = swapPairs(next.next);   
+		next.next = head;
+		return next;
+	}
+}
+
+// 迭代
+class Solution024 {
+	public ListNode swapPairs(ListNode head) {
+		ListNode dummy = new ListNode(0);
+		dummy.next = head;
+		ListNode cur = dummy;
+		while (cur.next != null && cur.next.next != null) { // cur → start → end
+			ListNode start = cur.next;          // 先让 cur.next 指向end,然后start.next 指向end.next,再让end.next 指向start做一个连接
+			ListNode end = cur.next.next;       // 最后cur指向start为下一次swapPairs做准备
+			cur.next = end;
+			start.next = end.next;
+			end.next = start;
+			cur = start;
+		}
+		return dummy.next;
+	}
+}
