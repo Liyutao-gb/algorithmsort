@@ -7,8 +7,8 @@ public class Main0025K个一组翻转链表 {
 	}
 }
 
-// 头结点0 	 1 -> 2 -> 3 	-> 4 	k=3
-// 	pre    start 	  end  newNext
+// 头结点0        1 -> 2 -> 3 	-> 4 	k=3
+//   pre       start 	  end 	 newNext
 class Solution25 {
 	public ListNode reverseKGroup(ListNode head, int k) {
 		if (head == null || head.next == null || k < 1)
@@ -19,18 +19,18 @@ class Solution25 {
 		ListNode pre = dummy; // pre和end都指向头结点
 		ListNode end = dummy;
 		while (end != null) {
-			for (int i = 0; i < k && end != null; i++) { // 走k步
+			for (int i = 0; i < k && end != null; i++) { // pre和end初始在头结点,end指针走k步
 				end = end.next;
 			}
 			if (end == null)
 				break;
-      //
+			// pre → start 	 →   end → newNext
 			ListNode start = pre.next;   // start保存待翻转链表的第一个节点,用于最后连接
 			ListNode newNext = end.next; // newNext保存待翻转链表的后一个结点,用于最后连接
-			end.next = null;             // end指向待翻转链表的最后一个节点,先让后面断开
-			pre.next = reverse(start);   // 翻转链表,并让pre.next指向翻转后链表的第一个节点
-			start.next = newNext;        // 连接翻转后链表和未翻转的链表
-			pre = start;                 // pre和end都指向待翻转链表的前一位置,用于下次翻转
+			end.next = null;             // 1.end指向待翻转链表的最后一个节点,先让后面断开
+			pre.next = reverse(start);   // 2.翻转链表,reverse(start)中start仅是一个参数,实际的start指针指向并不改变
+			start.next = newNext;        // 3.连接翻转后链表和未翻转的后续链表
+			pre = start;                 // 4.pre和end都指向下一次待翻转链表的前一节点位置,用于下次翻转
 			end = start;
 		}
 		return dummy.next;
