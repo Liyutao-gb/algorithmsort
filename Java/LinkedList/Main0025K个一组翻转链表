@@ -1,0 +1,50 @@
+package linkedlist;
+
+// 25K个一组翻转链表、206反转链表、92反转链表Ⅱ
+public class Main0025K个一组翻转链表 {
+	public static void main(String[] args) {
+		
+	}
+}
+
+// 头结点0 	 1 -> 2 -> 3 	-> 4 	k=3
+// 	pre    start 	  end  newNext
+class Solution25 {
+	public ListNode reverseKGroup(ListNode head, int k) {
+		if (head == null || head.next == null || k < 1)
+			return head;
+
+		ListNode dummy = new ListNode(0);
+		dummy.next = head;
+		ListNode pre = dummy; // pre和end都指向头结点
+		ListNode end = dummy;
+		while (end != null) {
+			for (int i = 0; i < k && end != null; i++) { // 走k步
+				end = end.next;
+			}
+			if (end == null)
+				break;
+      //
+			ListNode start = pre.next;   // start保存待翻转链表的第一个节点,用于最后连接
+			ListNode newNext = end.next; // newNext保存待翻转链表的后一个结点,用于最后连接
+			end.next = null;             // end指向待翻转链表的最后一个节点,先让后面断开
+			pre.next = reverse(start);   // 翻转链表,并让pre.next指向翻转后链表的第一个节点
+			start.next = newNext;        // 连接翻转后链表和未翻转的链表
+			pre = start;                 // pre和end都指向待翻转链表的前一位置,用于下次翻转
+			end = start;
+		}
+		return dummy.next;
+	}
+	
+	// pre → head
+	public ListNode reverse(ListNode head) {  // pre 为最后返回的链表,最后返回时pre指向翻转后链表的第一个节点,head指向pre.next（null）
+		ListNode pre = null;
+		while (head != null) {
+			ListNode temp = head.next; // 保存当前节点的下一个节点
+			head.next = pre;           // 让当前节点指向pre
+			pre = head;                // pre 指向head
+			head = temp;               // head指向之前保存的节点temp
+		}
+		return pre;
+	}
+}
