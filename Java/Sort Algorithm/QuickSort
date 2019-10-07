@@ -1,0 +1,88 @@
+package sort;
+
+import java.util.Arrays;
+import java.util.Random;
+//★快速排序 (递归) 速度快 900ms
+//平均时间复杂度：O(nlogn) 最好：O(nlogn) 最坏：O(n²)  空间复杂度：O(logn)  不稳定
+
+public class QuickSort {
+	public static void main(String[] args) {
+		int[] arr = { 7, 3, 2, 6, 8, 1, 9, 5, 4 };
+		sorted(arr, 0, arr.length - 1);
+		print(arr);
+
+		// int[] arr = new int[8000000];
+		// for (int i = 0; i < arr.length; i++) {
+		// arr[i] = new Random().nextInt(100000);
+		// }
+		//
+		// long l = System.currentTimeMillis();
+		// sort(arr, 0, arr.length - 1);
+		// long m = System.currentTimeMillis();
+		//
+		// System.out.println(m - l);
+
+	}
+
+	// 数组第一个值为基准
+	public static void sorted(int a[], int low, int high) {
+		if (a == null || low >= high)
+			return;
+
+		int i = low;
+		int j = high;
+		int key = a[low];
+
+		while (i < j) { // 此处的while循环结束，则完成了元素key的位置调整
+			while (i < j && key <= a[j]) {
+				j--;
+			}
+			a[i] = a[j];
+			while (i < j && key >= a[i]) {
+				i++;
+			}
+			a[j] = a[i];
+			a[i] = key; // 此处不可遗漏
+		}
+		sort(a, low, i - 1);
+		sort(a, i + 1, high);
+	}
+
+	// 数组最后一个值为基准
+	public static void sort(int[] arr, int left, int right) {
+		if (left >= right)
+			return;
+		int mid = partition(arr, left, right);
+		sort(arr, left, mid - 1);
+		sort(arr, mid + 1, right);
+	}
+
+	static int partition(int[] arr, int left, int right) {
+		int l = left;
+		int r = right - 1;
+
+		while (l <= r) {
+			while (l <= r && arr[l] <= arr[right])
+				l++;
+			while (l <= r && arr[r] > arr[right])
+				r--;
+			if (l < r)
+				swap(arr, l, r);
+		}
+		swap(arr, l, right);
+		// System.out.println(Arrays.toString(arr));
+		return l;
+	}
+
+	static void swap(int[] arr, int j, int i) {
+		int temp = arr[j];
+		arr[j] = arr[i];
+		arr[i] = temp;
+	}
+
+	static void print(int[] arr) {
+		for (int i = 0; i < arr.length; i++) {
+			System.out.print(arr[i] + " ");
+		}
+	}
+}
