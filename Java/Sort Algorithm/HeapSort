@@ -1,0 +1,69 @@
+package sort;
+
+import java.util.Arrays;
+
+//★当前结点的左子结点对应的数组2*n+1,右子结点2*n+2
+//堆排序(二叉树)  2300ms
+//平均时间复杂度：O(nlogn) 最好：O(nlogn) 最坏：O(nlogn)  空间复杂度：O(1)  不稳定
+
+public class HeapSort {
+	public static void main(String[] args) {
+		int[] arr = {2,4,3,5,6,7,9,1,8};
+		sort(arr);
+		System.out.println(Arrays.toString(arr));
+		
+//		int[] arr = new int[8000000];
+//		for (int i = 0; i < arr.length; i++) {
+//			arr[i] = new Random().nextInt(100000);
+//		}
+//
+//		long l = System.currentTimeMillis();
+//		sort(arr);
+//		long m = System.currentTimeMillis();
+//
+//		System.out.println(m - l);
+	}
+	
+	public static void sort(int[] arr) {
+		//根据升序降序构建大顶堆或小顶堆
+		for (int i = arr.length / 2 - 1; i >= 0; i--) {
+			adjustHeap(arr, i, arr.length);
+		}
+		
+		for (int i = arr.length - 1; i > 0; i--) {
+			int temp = arr[i];
+			arr[i] = arr[0];
+			arr[0] = temp;
+			adjustHeap(arr, 0, i);
+		}
+	}
+	
+	//将一个二叉树,调整成一个大顶堆
+	/**
+	 * 功能：完成将以 i 对应的非叶子结点的树调整成大顶堆
+	 * 例：int[] arr = {4,6,8,5,9}; => i = 1 => adjustHeap => 得到{4,9,8,5,6};
+	 * 如果再次调用 adjustHeap 传入i = 0 => 得到{4,9,8,5,6} => {9,6,8,5,4}
+	 * @param arr 待调整数组
+	 * @param i 非叶子结点在数组中索引
+	 * @param length 表示对多少个元素进行调整,length逐渐减少
+	 */
+	public static void adjustHeap(int[] arr,int i,int length) {
+		int temp = arr[i];
+		//1.j = i * 2 + 1 j是i结点的左子结点
+		for (int j = i * 2 + 1; j < length; j = j * 2 + 1) {
+			// 说明左子结点的值小于右子结点
+			if(j+1 < length && arr[j] < arr[j+1])
+				j++;// j 指向右结点
+			//如果子结点大于父结点
+			if(arr[j] > temp){
+				arr[i] = arr[j];//较大值赋给当前结点
+				i = j;// i指向 j,继续循环比较
+			}else {
+				break;
+			}
+		}
+		//当for循环结束后,我们已经将i为父结点的树的最大值,放在了最顶(局部)
+		arr[i] = temp;//将temp值放到调整后的位置
+	}
+	
+}
