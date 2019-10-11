@@ -1,0 +1,34 @@
+package stack;
+
+import java.util.Stack;
+
+public class Main用一个栈实现另一个栈的排序 {
+	public static void main(String[] args) {
+		Stack<Integer> stack = new Stack<>();
+		stack.push(2);
+		stack.push(1);
+		stack.push(3);
+		stack.push(4);
+		stack.push(5);
+		sort(stack);
+		for (Integer i : stack) {
+			System.out.print(i + " ");
+		} 
+	}
+	
+	// 排序stack中的数，使得从栈顶到栈底从大到小排列
+	//（help从栈顶到栈底从小到大）
+	public static void sort(Stack<Integer> stack) {
+		Stack<Integer> help = new Stack<>();
+		while (!stack.isEmpty()) {
+			int cur = stack.pop();
+			while (!help.isEmpty() && cur > help.peek()) {
+				stack.push(help.pop());
+			}
+			help.push(cur);
+		}
+		while (!help.isEmpty()) {
+			stack.push(help.pop());
+		}
+	}
+}
