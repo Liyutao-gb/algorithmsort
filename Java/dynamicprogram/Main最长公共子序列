@@ -1,0 +1,50 @@
+package dynamicprogram;
+
+public class Main最长公共子序列 {
+	public static void main(String[] args) {
+		String subsequence = getSubsequence("abcde", "ace");
+		System.out.println(subsequence);
+	}
+	
+	public static int[][] getDp(String text1, String text2) {
+    	int len1 = text1.length();
+    	int len2 = text2.length();
+        int[][] dp = new int[len1 + 1][len2 + 1];
+    	for (int i = 0; i < dp[0].length; i++) {
+			dp[0][i] = 0;
+		}
+    	for (int i = 0; i < dp.length; i++) {
+    		dp[i][0] = 0;
+    	}
+    	for (int i = 1; i < dp.length; i++) {
+			for (int j = 1; j < dp[i].length; j++) {
+				if(text1.charAt(i - 1) == text2.charAt(j - 1)) {
+					dp[i][j] = dp[i - 1][j - 1] + 1;
+				} else {
+					dp[i][j] =  Math.max(dp[i - 1][j], dp[i][j - 1]);
+				} 
+			}
+		}
+    	return dp;
+    }
+	
+	public static String getSubsequence(String text1, String text2){
+		int[][] dp = getDp(text1, text2);
+		StringBuffer res = new StringBuffer();
+		int m = dp.length - 1;
+		int n = dp[0].length - 1;
+		while (m > 0 && n > 0) {
+			// 必须要加第二条限定条件，反例：bl,yby
+			if(dp[m - 1][n] == dp[m][n - 1] && dp[m][n] != dp[m - 1][n - 1]) {
+				res.append(text1.charAt(m - 1));
+				m--;
+				n--;
+			} else if(dp[m - 1][n] > dp[m][n - 1]){
+				m--;
+			} else {
+				n--;
+			}
+		}
+		return res.reverse().toString();
+	}
+}
