@@ -2,7 +2,10 @@ package dynamicprogram;
 
 public class Main最长公共子序列 {
 	public static void main(String[] args) {
-		String subsequence = getSubsequence("abcde", "ace");
+		String s1 = "abc";
+		String s2 = "def";
+		int[][] dp = getDp(s1, s2); // 时间复杂度(M×N) 空间复杂度(M或N)
+		String subsequence = getSubsequence(s1, s2);
 		System.out.println(subsequence);
 	}
 	
