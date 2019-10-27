@@ -4,11 +4,9 @@ public class Main最长递增子序列 {
 	public static void main(String[] args) {
 		int[] arr = {2,1,5,3,6,4,8,9,7};
 		print(arr);
-		// 获得dp数组的两种方法
-		int[] getdp1 = getdp1(arr);
-		print(getdp1);	// 时间复杂度 n平方
-		print(getdp2(arr));	// 时间复杂度 nlogn
-		int[] lis = getLIS(arr, getdp1);
+		int[] getdp1 = getdp1(arr); // 时间复杂度 (n平方)
+		int[] getdp2 = getdp2(arr);	// 时间复杂度 (nlogn)
+		int[] lis = getLIS(arr);
 		print(lis);
 	}
 	
@@ -54,7 +52,8 @@ public class Main最长递增子序列 {
 		return dp;
 	}
 	
-	public static int[] getLIS(int[] arr, int[] dp){
+	public static int[] getLIS(int[] arr){
+		int[] dp = getdp1(arr);
 //		 找到dp数组中最大递增子序列的长度以及下标
 		int len = dp[0];
 		int index = 0;
