@@ -1,0 +1,116 @@
+Leetcode  371  两整数之和
+65.求两个整数之和，要求在函数体内不得使用＋、－、×、÷四则运
+     算符号。
+     
+加法运算：a + b
+      num1 ^ num2	（没有进位的和）
++	num1 & num2 << 1 （    进位循环   ）
+循环直到num2 == 0(没有进位为止)
+
+减法运算：a + （-b）
+实现a - b 只要实现 a + (-b) 即可。根据二进制在机器中的表达，得到一个数的
+相反数，就是这个数 取反 + 1（补码） 的结果。
+
+乘法运算：a × b （相当于加法运算，b个a相加）
+a×b 的结果可以写成 a×2⁰×b0 + a×2×b1 + ... + a ×2^i × bi +...+ a×2^31× b31，
+其中，bi 为 0 或 1 代表整数b的二进制数表达中第 i 位的值。
+
+除法运算：a / b
+乘法的逆运算。
+补充：
+按位与&
+（1）清零：a&0=0
+（2）取指定位上的数字，如取得数字a的最后四位：a&0000 1111 = 0000 1010
+ 按位或|
+（1）置1，如将a的后四位置为1：a|0000 1111 = 1010 1111
+ 异或^
+（1）取反，如将a的后四位取反：a^0000 1111 = 1010 0101
+（2）与0异或保留原值，如：a^0000 0000 =1010 1010
+（3）交换两个的变量值：A=A^B; B=A^B; A=A^B; 
+	     		          加减法：A=A+B; B=A-B; A=A-B;
+                    
+代码如下：
+package bitmanipulation;
+
+public class Main0371两整数之和 {
+	public static void main(String[] args) {
+		System.out.println(new Solution371().add(5, 3));
+		System.out.println(new Solution371().minus(5, 3));
+		System.out.println(new Solution371().multip(5, 3));
+		System.out.println(new Solution371().div(5, 3));
+	}
+}
+
+/**
+ * 加法运算:无进位加法 + 进位后左移
+ */
+class Solution371 {
+	public int add(int a, int b) {
+		while (b != 0) {
+			int ans = a ^ b;
+			b = (a & b) << 1;
+			a = ans;
+		}
+		return a;
+	}
+
+	/**
+	 * 减法运算：a + (-b)
+	 * 得到一个数的相反数：b取反 + 1(~b + 1) 补码
+	 */
+	public int negNum(int n) {
+		return add(~n, 1);
+	}
+
+	public int minus(int a, int b) {
+		return add(a, negNum(b));
+	}
+
+	/**
+	 * 乘法运算：相当于加法运算
+	 * a×b 的结果可以写成 a×2⁰×b0 + a×2×b1 + ... + a ×2^i × bi +...+ a×2^31× b31，
+	 * a = 22 = 0001 0110 
+	 * b = 13 = 0000 1101
+	 * 22*1 + 22*4 + 22*8 = 22*13
+	 */
+	public int multip(int a, int b) {
+		int res = 0;
+		while (b != 0) {
+			if ((b & 1) != 0) {
+				res = add(res, a);
+			}
+			a <<= 1;
+			b >>>= 1;
+		}
+		return res;
+	}
+	
+	/**
+	 * 除法运算
+	 */
+	public boolean isNeg(int n) {
+		return n < 0;
+	}
+	
+	public int div(int a, int b) {
+		int x = isNeg(a)? negNum(a) : a;
+		int y = isNeg(b)? negNum(b) : b;
+		int res = 0;
+		for (int i = 31; i >= 0; i = minus(i, 1)) {
+			if ((x >> 1) >= y) {
+				res |= (1 << i);
+				x = minus(x, y << i);
+			}
+		}
+		return isNeg(a) ^ isNeg(b) ? negNum(res) : res;
+	}
+}
+
+// 递归
+class Solution0371 {
+	public int add(int a, int b) {
+		if (b == 0)
+			return a;
+		return add(a ^ b, (a & b) << 1);
+	}
+}
