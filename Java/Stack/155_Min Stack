@@ -1,0 +1,77 @@
+Leetcode  155  最小栈
+30.包含min函数的栈（Min Stack）
+定义栈的数据结构，请在该类型中实现一个能够得到栈的最小元素的min函数。在该
+栈中，调用min、push及pop的时间复杂度都是O(1)。
+同步栈：
+stack_data: 3，4，2，5，1
+stack_min:  3，3，2，2，1
+非同步栈：
+stack_data: 3，4，2，5，1
+stack_min:  3，2，1
+
+注：连续压入两个相同的数据，最小栈也要压入两个相同数据（同步和非同步）
+调用min函数返回最小值，不弹出最小值。
+
+
+代码如下：
+package com.lyt.java;
+
+import java.util.Stack;
+
+public class Offer30_StackWithMin {
+	Stack<Integer> stack_data = new Stack<Integer>();
+	Stack<Integer> stack_min = new Stack<Integer>();
+
+	/**
+	 * 同步栈
+	 */
+	public void push(int x) {
+		stack_data.push(x);
+		if (stack_min.empty() ||  x <= stack_min.peek()) {
+			stack_min.push(x);
+		} else {
+			stack_min.push(stack_min.peek());
+		}
+	}
+
+	public void pop() {
+		if (stack_data.empty()) {
+			throw new RuntimeException("栈空");
+		}
+		stack_data.pop();
+		stack_min.pop();
+	}
+
+	public int min() {
+		if(stack_min.empty()) {
+			throw new RuntimeException("栈空");
+		}
+		return stack_min.peek();
+	}
+	
+	/**
+	 * 非同步栈
+	 */
+	public void push1(int x) {
+		stack_data.push(x);
+		if (stack_min.isEmpty() || x <= getMin()) {
+			stack_min.push(x);
+		}
+	}
+
+	public void pop1() {
+		if (stack_data.isEmpty()) {
+			throw new RuntimeException("Your stack is empty.");
+		}
+		int val = stack_data.pop();
+		if (val == getMin())
+			stack_min.pop();
+	}
+
+	public int getMin() {
+		if (stack_min.isEmpty()) {
+			throw new RuntimeException("Your stack is empty.");
+		}
+		return stack_min.peek();
+	}
+}
