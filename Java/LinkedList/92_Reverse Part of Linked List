@@ -1,0 +1,93 @@
+Leetcode  92  反转链表Ⅱ
+反转部分单链表（Reverse Part of Linked List） 
+给定一个单向链表的头结点head，以及两个整数from和to，在单向链表上把第from
+个结点到第to个结点这一部分进行反转。
+输入: 1->2->3->4->5->NULL, m = 2, n = 4
+	输出: 1->4->3->2->5->NULL
+
+本题可能出现换头问题。
+a. 在新链表上操作，找到反转部分链表的前一个结点和后一个结点，反转后连起来。
+    1. 先判断是否满足1<=from<=to<=N，如果不满足，直接返回头结点；
+    2. 找到第from - 1个结点和第to + 1个结点，把反转的部分先反转，然后正确地
+ 连接from - 1和to + 1位置的结点。
+b. 遍历一次
+    1. 我们需要两个指针 prev 和 cur，prev 指针初始化为 Null，cur 指针初始化为
+链表的 head；
+    2. 同步地向前推进 cur 和 prev 指针，直到 cur 指针到达从链表头起的第 m 个结
+点。这是反转链表的起始位置；
+    3. 再引入两个额外指针，分别称为 tail 和 con。tail 指针指向从链表头起的第m个
+结点，此结点是反转后链表的尾部。con 指针指向第  m 个结点的前一个结点；
+    4. tail 和 con 指针在算法最后被调用，用于完成链表反转。抵达第 m 个结点后，
+在用到上述两个指针前，先迭代地反转链接。不断迭代，直到完成指向第 n 个
+结点的链接。此时，prev 指针会指向第 n 个结点；
+    5. 最后使用 con 指针来连接 prev 指针， 类似地，用 tail 指针来连接 prev 指针
+之后的结点。
+
+
+代码如下：
+
+//1->2->3->4->5 from = 2, to = 4
+class Solution092 {
+	public ListNode reverseBetween(ListNode head, int m, int n) {
+		if (head == null || head.next == null)
+			return head;
+
+		ListNode dummy = new ListNode(0);
+		dummy.next = head;
+		ListNode pre = dummy;
+		ListNode con = dummy;
+		for (int i = 0; i < m - 1; i++)
+			pre = pre.next;
+		for (int i = 0; i < n; i++)
+			con = con.next;
+
+		ListNode tail = pre.next, cur = con.next;
+		con.next = null; // Key
+		pre.next = reverse(tail);
+		tail.next = cur;
+		return dummy.next;
+	}
+
+	public ListNode reverse(ListNode head) {
+		ListNode pre = null;
+		while (head != null) {
+			ListNode temp = head.next;
+			head.next = pre;
+			pre = head;
+			head = temp;
+		}
+		return pre;
+	}
+}
+
+//  1  ->  2  ->  3  ->  4  ->  5  from = 2, to = 4
+// pre    tail          end    cur
+class Solution92 {
+	public ListNode reverseBetween(ListNode head, int m, int n) {
+		if (head == null || head.next == null || m > n)
+			return head;
+
+		ListNode cur = head, pre = null;
+		while (m > 1) {
+			pre = cur;
+			cur = cur.next;
+			m--;
+			n--;
+		}
+		
+		ListNode con = pre, tail = cur;
+		while (n > 0) {
+			ListNode newNext = cur.next;
+			cur.next = con;
+			con = cur;
+			cur = newNext;
+			n--;
+		}
+		if (pre != null)
+			pre.next = con;
+		else
+			head = con;
+		tail.next = cur;
+		return head;
+	}
+}
