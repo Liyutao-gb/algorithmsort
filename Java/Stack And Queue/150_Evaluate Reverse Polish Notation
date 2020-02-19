@@ -1,0 +1,46 @@
+Leetcode  150
+逆波兰表达式求解（Evaluate Reverse Polish Notation）
+根据逆波兰表示法（后缀表达式），求表达式的值。有效的运算符包括 +, -, *, / 。每个
+运算对象可以是整数，也可以是另一个逆波兰表达式。
+
+输入: ["4", "13", "5", "/", "+"]
+输出: 6
+解释: (4 + (13 / 5)) = 6
+
+定义一个辅助栈，遍历字符串数组。
+1. 遇到数字就入栈；
+2. 遇到 +, -, *, / 时，栈中都至少会有两个数字，取出栈顶的两个数字进行计算（记为
+    stack_pop1，stack_pop2），不过要注意stack_pop2 +, -, *, / stack_pop1，先后
+    顺序要注意。
+    
+代码如下：
+package stack;
+
+import java.util.Stack;
+
+public class Main0150EvaluateReversePolishNotation {
+	public static void main(String[] args) {
+		System.out.println(new Solution150().evalRPN(new String[] { "2", "1", "+", "3", "*" }));
+	}
+}
+
+class Solution150 {
+	public int evalRPN(String[] tokens) {
+		Stack<Integer> stack = new Stack<>();
+		for (String s : tokens) {
+			if (s.equals("+")) {
+				stack.push(stack.pop() + stack.pop());
+			} else if (s.equals("-")) {
+				stack.push(-stack.pop() + stack.pop());
+			} else if (s.equals("*")) {
+				stack.push(stack.pop() * stack.pop());
+			} else if (s.equals("/")) {
+				int num1 = stack.pop();
+				stack.push(stack.pop() / num1);
+			} else {
+				stack.push(Integer.parseInt(s));
+			}
+		}
+		return stack.pop();
+	}
+}
