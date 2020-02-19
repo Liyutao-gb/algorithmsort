@@ -1,21 +1,28 @@
-package linkedlist;
+Leetcode  23  
+合并K个排序链表（Merge k Sorted Lists）
+合并 k 个排序链表，返回合并后的排序链表。请分析和描述算法的复杂度。
+输入:[ 1->4->5,
+	   1->3->4,
+	   2->6 ]
+输出: 1->1->2->3->4->4->5->6
 
-public class Main0023合并K个排序链表 {
-	public static void main(String[] args) {
-		
-	}
-}
+思路：归并排序思想。
+1. 先把K个链表递归分成一个一个的；
+2. 然后两条两条链表归并，最后返回结果链表。
+
+代码如下：
+package linkedlist;
 
 class Solution23 {
 	public ListNode mergeKLists(ListNode[] lists) {
-		if (lists.length == 0)
+		if (lists == null || lists.length <= 0)
 			return null;
 		return merge(lists, 0, lists.length - 1);
 	}
 
 	// 1,2,3,4 分别代表一条链表	l1返回1、2的合并链表,l2返回3、4的合并链表
 	// 最后返回1,2,3,4的合并链表
-	public ListNode merge(ListNode[] lists, int left, int right) {  // 归并排序思想
+	public ListNode merge(ListNode[] lists, int left, int right) {
 		if (left == right)
 			return lists[left];
 		int mid = (left + right) / 2;
@@ -24,7 +31,7 @@ class Solution23 {
 		return mergeTwoList(l1, l2);
 	}
 
-	public ListNode mergeTwoList(ListNode l1, ListNode l2) { // 合并两条链表
+	public ListNode mergeTwoList(ListNode l1, ListNode l2) {
 		if (l1 == null)
 			return l2;
 		if (l2 == null)
