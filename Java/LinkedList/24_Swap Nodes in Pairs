@@ -1,0 +1,54 @@
+Leetcode  24  
+两两交换链表中的结点（Swap Nodes in Pairs）
+   给定一个链表，两两交换其中相邻的节点，并返回交换后的链表。
+   输入: 1 -> 2 -> 3 -> 4 -> NULL
+   输出: 2 -> 1 -> 4 ->3 -> NULL
+
+a. 递归
+1. 其实可以看成三个节点：head, next, swapPairs(next.next)；
+2. 先保存next结点，然后head指向swapPairs(next.next)，最后next指向head；
+3. 最后返回next。
+b. 迭代
+1. new一个新链表，并定义一个指向新链表头结点的指针pre，记录pre.next 为 
+    start，pre.next.next 为 end；
+2. ① pre.next = end；② start.next = end.next； ③ end.next = start；
+    ② 和 ③ 顺序不能调换，不然链表会断！
+    
+    
+代码如下：
+
+// 迭代
+class Solution24 {
+	public ListNode swapPairs(ListNode head) {
+		if (head == null || head.next == null)
+			return head;
+
+		ListNode dummy = new ListNode(0);
+		dummy.next = head;
+		ListNode pre = dummy;
+		// cur → start → end
+		while (pre.next != null && pre.next.next != null) {
+			ListNode start = pre.next;
+			ListNode end = pre.next.next;
+			pre.next = end;
+			start.next = end.next;	// ②
+			end.next = start;		// ③和②顺序不能互换，否则链表会断
+			pre = start;
+		}
+		return dummy.next;
+	}
+}
+
+// 递归
+class Solution024 {
+	public ListNode swapPairs(ListNode head) {
+		if (head == null || head.next == null)
+			return head;
+		
+		// 三个节点顺序:head, next, swapPairs(next.next)
+		ListNode next = head.next;
+		head.next = swapPairs(next.next);
+		next.next = head;
+		return next;
+	}
+}
