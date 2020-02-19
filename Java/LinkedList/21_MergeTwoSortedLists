@@ -1,0 +1,64 @@
+Leetcode  21  合并两个有序链表
+25.合并两个排序的链表（Merge Two Sorted Lists）
+输入两个递增排序的链表，合并这两个链表并使新链表中的结点仍然是按照递增排
+序的。
+输入：1 -> 2 -> 4, 1 -> 3 -> 4
+输出：1 -> 1 -> 2 -> 3 -> 4 -> 4
+
+a. 递归：合并过程中，每次都是从两个链表中找出较小的一个来链接，从后往前进
+行链接，当任意一个链表为null时，直接链接另一个链表。
+b. 迭代（新链表）：归并排序思想，当任意一个链表为null时，直接链接另一个链表。
+
+
+代码如下：
+package com.lyt.java;
+
+public class Offer25_MergeSortedLists {
+	public class ListNode {
+		int val;
+		ListNode next = null;
+
+		public ListNode(int val) {
+			this.val = val;
+		}
+	}
+
+	/**
+	 * 递归
+	 */
+	public ListNode merge(ListNode l1, ListNode l2) {
+		if (l1 == null)
+			return l2;
+		if (l2 == null)
+			return l1;
+		if (l1.val < l2.val) {
+			l1.next = merge(l1.next, l2);
+			return l1;
+		} else {
+			l2.next = merge(l1, l2.next);
+			return l2;
+		}
+	}
+
+	/**
+	 * 非递归
+	 */
+	public ListNode merge2(ListNode l1, ListNode l2) {
+		ListNode dummyHead = new ListNode(0);
+		ListNode cur = dummyHead;
+		while (l1 != null && l2 != null) {
+			if (l1.val < l2.val) {
+				cur.next = l1;
+				l1 = l1.next;
+			} else {
+				cur.next = l2;
+				l2 = l2.next;
+			}
+			cur = cur.next;
+		}
+		cur.next = l1 == null ? l2 : l1;
+		return dummyHead.next;
+	}
+}
+
+
