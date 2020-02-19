@@ -1,7 +1,7 @@
 package dynamicprogram;
 
 //分治 + 递归
-public class Main汉诺塔 {
+public class HanoiTowers {
 	public static void main(String[] args) {
 		hanoitower(3, 'A', 'B', 'C');
 	}
