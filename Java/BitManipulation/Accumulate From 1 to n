@@ -1,0 +1,29 @@
+64.求1+2+…+n，要求不能使用乘除法、for、while、if、else、
+switch、case等关键字及条件判断语句（A?B:C）。
+用递归代替循环。
+
+boolean flag = (n > 1) && ((n += getSum(n - 1)) > 0);
+或者
+ if (n > 1)		n += getSum(n - 1);
+
+
+代码如下：
+package com.lyt.java;
+
+public class Offer64_Accumulate {
+	public int getSum(int n) {
+		boolean flag = (n > 1) && ((n += getSum(n - 1)) > 0);
+		// boolean flag = (n == 1) || ((n += getSum(n - 1)) > 0);
+
+		// 上面这句话相当于下面：（利用递归来代替循环)
+		// if (n > 1)
+		// 		n += getSum(n - 1);
+		return n;
+	}
+
+	public static void main(String[] args) {
+		Offer64_Accumulate demo = new Offer64_Accumulate();
+		int sum = demo.getSum(5);
+		System.out.println(sum);
+	}
+}
