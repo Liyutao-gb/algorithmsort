@@ -1,0 +1,100 @@
+Leetcode  191 231 342 326  位1的个数、2的幂、4的幂、3的幂(除法)
+
+15.二进制中1的个数
+请实现一个函数，输入一个整数，输出该数二进制表示中1的个数。例如把9表示
+成二进制是1001，有2位是1。因此如果输入9，该函数输出2。 你需要把整数看成是
+一个无符号数。（you need to treat n as an unsigned value）
+
+a. 先把整数n与1做与运算，判断最低位是否为1；接着把1左移一位，与n做与运算，
+   可以判断次低位是否为1……反复左移，即可对每一个位置都进行判断，从而可
+   以获得1的个数。这种方法需要循环判断32次。
+b. 把一个整数减1，再和原来的整数做与运算，会把该整数最右边的1变成0。因此，
+   整数中有几个1，就循环判断几次。
+
+扩展：1. 判断一个整数为2的整数次方。
+        n > 0 && (n & (n - 1)) == 0
+     2. 判断一个整数为 4（2²）的整数次方。
+        n > 0 && (n & (n - 1)) == 0 && (n & 0x55555555) == n
+     3. 输入两个整数m和n，计算需要改变m的二进制表示中的多少位能得到n。
+        1）求这两个数的异或；
+        2）统计异或结果中1的位数。
+     4. 负数 >> 小心死循环！！！
+     5. 算术右移运算符：>>   正数高位补0,负数高位补1，符号位不变；
+        逻辑右移运算符：>>> 正数、负数高位都补0。
+
+代码如下：
+package com.lyt.java;
+
+public class Offer15_NumberOf1InBinary {
+	public int NumberOf1_Solution1(int n) {
+		int count = 0;
+		int flag = 1;
+		while (flag != 0) {
+			if ((flag & n) != 0)
+				count++;
+			flag <<= 1;
+		}
+		return count;
+	}
+
+	public int NumberOf1_Solution2(int n) {
+		int count = 0;
+		while (n != 0) {
+			count++;
+			n = (n - 1) & n;
+		}
+		return count;
+	}
+
+	// =========测试代码========= 
+
+	void test(String testName, int n, int expected) {
+		if (testName != null)
+			System.out.println(testName + ":");
+		if (NumberOf1_Solution1(n) == expected) {
+			System.out.print("    soluton1:" + "passed  ");
+		} else {
+			System.out.print("    solution1:" + "failed  ");
+		}
+
+		if (NumberOf1_Solution2(n) == expected) {
+			System.out.println("soluton2:" + "passed  ");
+		} else {
+			System.out.println("solution2:" + "failed  ");
+		}
+	}
+
+	void test1() {
+		test("Test for 0", 0, 0);
+	}
+
+	void test2() {
+		test("Test for 1", 1, 1);
+	}
+
+	void test3() {
+		test("Test for 10", 10, 2);
+	}
+
+	void test4() {
+		test("Test for 0x7FFFFFFF", 0x7FFFFFFF, 31);
+	}
+
+	void test5() {
+		test("Test for 0xFFFFFFFF", 0xFFFFFFFF, 32);
+	}
+
+	void test6() {
+		test("Test for 0x80000000", 0x80000000, 1);
+	}
+
+	public static void main(String[] args) {
+		Offer15_NumberOf1InBinary demo = new Offer15_NumberOf1InBinary();
+		demo.test1();
+		demo.test2();
+		demo.test3();
+		demo.test4();
+		demo.test5();
+		demo.test6();
+	}
+}
