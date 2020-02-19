@@ -1,41 +1,125 @@
+Leetcode  445  两数相加Ⅱ
+两个单链表生成相加链表（Add Two Numbers）
+    给定两个非空链表来代表两个非负整数。数字最高位位于链表开始位置。它们的每个节点
+只存储单个数字。将这两数相加会返回一个新的链表。你可以假设除了数字 0 之外，这两个数
+字都不会以零开头。
+
+输入：(9 -> 3 -> 7) + (6 -> 3)
+输出：1 -> 0 -> 0 ->0
+原因：937 + 63 = 1000
+
+方法一：利用栈	（栈空间替代了逆序）
+1. 利用两个栈，将两条链表各自的结点从头到尾入栈；
+2. 两个栈每次从栈顶开始各自弹出一个结点，生成新链表即可。
+
+方法二： 利用链表逆序求解，节省空间（逆序替代了栈空间）。
+1. 将两个链表逆序，这样可以依次得到从低位到高位的数字；
+2. 同步遍历两个逆序后的链表，如果有进位，那么向后进位；
+3. 当两个链表遍历完，看进位是否为1，如果为1，需要生成一个新结点。
+注：生成新链表过程用一个指针保存新链表前一个节点，这样可以直接生成结果所需
+链表，就不需要最后再反转生成的新链表了。
+
+代码如下：
 package linkedlist;
 
-public class Main0086分隔链表 {
+import java.util.Stack;
+
+public class Main0445AddTwoNumbersⅡ {
 	public static void main(String[] args) {
-		ListNode head = new ListNode(1);
-		ListNode node = new ListNode(4);
-		ListNode node1 = new ListNode(3);
-		ListNode node2 = new ListNode(2);
-		head.next = node;
+		ListNode l1 = new ListNode(9);
+		ListNode node = new ListNode(3);
+		ListNode node1 = new ListNode(7);
+		ListNode l2 = new ListNode(6);
+		ListNode node2 = new ListNode(3);
+		l1.next = node;
 		node.next = node1;
-		node1.next = node2;
-		ListNode partition = new Solution86().partition(head, 3);
-		while (partition != null) {
-			System.out.print(partition.val + " ");
-			partition = partition.next;
+		l2.next = node2;
+		ListNode node3 = new Solution445().addTwoNumbers(l1, l2);
+		while (node3 != null) {
+			System.out.print(node3.val + " ");
+			node3 = node3.next;
 		}
 	}
 }
 
-class Solution86 {
-	public ListNode partition(ListNode head, int x) {
-		ListNode first = new ListNode(0);
-		ListNode low = first;
-		ListNode second = new ListNode(0);
-		ListNode high = second;
+// 	 9 3 7 	  7 3 9
+//     6 3 	  3 6
+// 1 0 0 0    0 0 0 1
+// 反转链表l1、反转链表l2		-----→	反转新链表
+//（逆序替代了栈空间）
+class Solution445 {
+	public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+		ListNode rev1 = reverseList(l1);
+		ListNode rev2 = reverseList(l2);
 
-		while (head != null) {
-			if (head.val < x) {
-				low.next = head;
-				low = head;
-			} else {
-				high.next = head;
-				high = head;
-			}
-			head = head.next;
+		ListNode pre = null;
+		ListNode res = null;
+		int carry = 0;
+		while (rev1 != null || rev2 != null) {
+			int num1 = rev1 == null ? 0 : rev1.val;
+			int num2 = rev2 == null ? 0 : rev2.val;
+			carry += num1 + num2;
+			pre = res;						// 保存res的前一个节点
+			res = new ListNode(carry % 10); // res指向新结点
+			res.next = pre;					// 指向前一个节点
+			carry /= 10;
+			rev1 = rev1 == null ? null : rev1.next;
+			rev2 = rev2 == null ? null : rev2.next;
 		}
-		high.next = null; 		// Key
-		low.next = second.next;
-		return first.next;
+		if (carry == 1) {
+			pre = res;
+			res = new ListNode(1);
+			res.next = pre;
+		}
+		return res;
+	}
+
+	public ListNode reverseList(ListNode cur) {
+		ListNode pre = null;
+		while (cur != null) {
+			ListNode tmp = cur.next;
+			cur.next = pre;
+			pre = cur;
+			cur = tmp;
+		}
+		return pre;
+	}
+}
+
+// 栈空间替代了逆序
+class Solution0445 {
+	public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+		Stack<ListNode> stack1 = new Stack<>();
+		Stack<ListNode> stack2 = new Stack<>();
+		ListNode rev1 = l1, rev2 = l2;
+		while (rev1 != null) {
+			stack1.push(rev1);
+			rev1 = rev1.next;
+		}
+		while (rev2 != null) {
+			stack2.push(rev2);
+			rev2 = rev2.next;
+		}
+
+		ListNode pre = null;
+		ListNode res = null;
+		int carry = 0;
+		while (!stack1.empty() || !stack2.empty()) {
+			int num1 = stack1.empty() ? 0 : stack1.pop().val;
+			int num2 = stack2.empty() ? 0 : stack2.pop().val;
+			carry += num1 + num2;
+			pre = res;						// 保存res的前一个节点
+			res = new ListNode(carry % 10); // res指向新结点
+			res.next = pre;					// 指向前一个节点
+			carry /= 10;
+			rev1 = rev1 == null ? null : rev1.next;
+			rev2 = rev2 == null ? null : rev2.next;
+		}
+		if (carry == 1) {
+			pre = res;
+			res = new ListNode(1);
+			res.next = pre;
+		}
+		return res;
 	}
 }
