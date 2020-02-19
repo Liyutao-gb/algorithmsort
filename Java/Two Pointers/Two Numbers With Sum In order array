@@ -1,0 +1,57 @@
+57.（1）和为s的两个数字
+  输入一个递增排序的数组和一个数字s，在数组中查找两个数，使得它们的和正好
+是s。如果有多对数字的和等于s，输出任意一对即可。
+指针从两端开始。
+
+1. 当small加big的和小于s时，只需要将small指向后一个数字（更大），继续判断；
+2. 当small加big的和大于s时，只需要将big指向前一个数字（更小），继续判断；
+3. 当small加big的和等于s时，求解完成。
+ 
+   注：有序数组。找数字。
+
+代码如下：
+package com.lyt.java;
+
+import java.util.HashMap;
+import java.util.Map;
+
+public class Offer57_TwoNumbersWithSum {
+	/**
+	 * 两数之和：有序数组，找数字
+	 */
+	public int[] findNumbersWithSum(int[] nums, int target) {
+		if (nums == null || nums.length <= 0)
+			throw new RuntimeException("数组不合法");
+		
+		int low = 0;
+		int high = nums.length - 1;
+		while (low < high) {
+			if (nums[low] + nums[high] == target) {
+				return new int[] {nums[low], nums[high]};
+			} else if (nums[low] + nums[high] < target)
+				low++;
+			else
+				high--;
+		}
+		return new int[]{};
+	}
+
+	/**
+	 * 两数之和：无序数组，找下标
+	 */
+	public int[] twoSum(int[] nums, int target) {
+		if (nums == null || nums.length <= 0)
+			throw new RuntimeException("数组不合法");
+
+		Map<Integer, Integer> map = new HashMap<>();
+		for (int i = 0; i < nums.length; i++) {
+			int num = target - nums[i];
+			if (map.containsKey(num)) {
+				return new int[] { map.get(num), i };
+			}
+			map.put(nums[i], i);
+		}
+
+		return new int[]{};
+	}
+}
