@@ -1,8 +1,26 @@
+Leetcode  234  回文链表
+判断单链表是否为回文链表（Palindrome Linked List）
+请判断一个链表是否为回文链表。
+
+输入: 1->2->2->1
+输出: true
+
+方法一：利用栈结构（可以压入全部或一半的节点）	空间复杂度：O(n)
+1. 从头到尾遍历链表，把每个结点放入栈中；
+2. 遍历完后，如果一个链表是回文链表，那么从栈顶到栈底的值和链表从头到尾的
+    值是一样的。
+方法二：旋转半部分链表	空间复杂度：O(1)
+1. 找到链表中间节点，反转整个右半区（记得中间剪断左右链表 p1.next = null）；
+2. 从头到尾遍历比较两段链表的值，如果值都一样，就是回文链表；
+3. 恢复链表。（可选）
+
+
+代码如下：
 package linkedlist;
 
 import java.util.Stack;
 
-public class Main0234回文链表 {
+public class Main0234PalindromeLinkedList {
 	public static void main(String[] args) {
 		ListNode head = new ListNode(1);
 		ListNode node = new ListNode(2);
@@ -14,7 +32,6 @@ public class Main0234回文链表 {
 	}
 }
 
-// 反转后半段链表
 class Solution234 {
 	public boolean isPalindrome(ListNode head) {
 		if (head == null || head.next == null)
