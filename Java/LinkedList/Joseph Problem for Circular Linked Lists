@@ -1,0 +1,96 @@
+程序员代码面试指南（第2版）
+环形单链表的约瑟夫问题（Joseph Problem for Circular Linked Lists）
+约瑟夫问题用单向链表表示该结构。输入：一个环形单向链表的头结点head和报
+数的值m。返回：最后生存下来的结点，且这个节点自己组成环形单向链表，其他结点
+都删除。
+
+输入：1 -> 2 -> 3 -> 4 -> 5 -> 1,  m = 2
+输出：3
+原因：第一次删除2，第二次删除4，第三次删除1，第四次删除5，最后剩下结点3。
+
+循环解：时间复杂度：O(n×m)  每删除一个结点要遍历m次，一共要删除n-1个。
+1. 如果链表长度小于等于1，直接返回；
+2. 在环形链表中遍历每个结点，不断转圈，不断让每个结点报数；
+3. 当报数到达m，就删除当前报数结点，并把剩下结点连成环状，继续报数、删除
+    ，直到最后只剩一个结点。
+
+证明：求出最后所剩结点。	时间复杂度：O(N)
+1. 遍历链表，求链表的结点个数记为n，时间复杂度O(n)；
+2. 利用getLive(参数 链表长度length，报数值m)方法求的最后存活的结点；
+3. 找到该结点，返回结点。
+
+代码如下：
+package linkedlist;
+
+public class JosephProblemforCircularLinked {
+	public static void main(String[] args) {
+		ListNode head = new ListNode(1);
+		ListNode node = new ListNode(2);
+		ListNode node1 = new ListNode(3);
+		head.next = node;
+		node.next = node1;
+		node1.next = head;
+		ListNode josephus1 = josephus1(head, 2);
+		System.out.println(josephus1.val);
+		
+		int live = getLive(3, 2);
+		System.out.println("最后留下的节点：" + live);
+	}
+
+	/**
+	 * 1. 如果链表长度小于等于1，直接返回；
+	 * 2. 在环形链表中遍历每个结点，不断转圈，不断让每个结点报数；
+	 * 3. 当报数到达m，就删除当前报数结点，并把剩下结点连成环状，继续报数、删除，
+	 * 	    直到最后只剩一个结点.
+	 */
+	public static ListNode josephus1(ListNode head, int m) {
+		if (head == null || head.next == null || m < 1)
+			return head;
+
+		ListNode last = head;
+		while (last.next != head)
+			last = last.next;
+		
+		int count = 0;
+		while (head != last) {
+			count++;
+			if (count == m) {
+				last.next = head.next;
+				count = 0;
+			} else {
+				last = last.next;	// last = cur;
+			}
+			head = last.next;
+		}
+		return head;
+	}
+	
+	/**
+	 * 证明：得出最后剩下的一个结点位置
+	 */
+	public static ListNode josephusKill2(ListNode head, int m) {
+		if (head == null || head.next == null || m < 1)
+			return head;
+
+		int len = 1;
+		ListNode cur = head.next;
+		while (cur != head) {
+			len++;
+			cur = cur.next;
+		}
+		int live = getLive(len, m);
+		while (live != 1) {
+			live--;
+			head = head.next;
+		}
+		head.next = head;
+		return head;
+	}
+	
+	// 利用链表长度和报数数字计算出存活的节点
+	public static int getLive(int len, int m) {
+		if (len == 1)
+			return 1;
+		return (getLive(len - 1, m) + m - 1) % len + 1;
+	}
+}
