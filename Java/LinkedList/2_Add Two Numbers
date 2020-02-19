@@ -1,0 +1,57 @@
+Leetcode  2  两数相加
+两个单链表生成相加链表（Add Two Numbers）
+   给出两个 非空 的链表用来表示两个非负的整数。其中，它们各自的位数是按照 逆序
+的方式存储的，并且它们的每个节点只能存储 一位 数字。如果，我们将这两个数相加起
+来，则会返回一个新的链表来表示它们的和。您可以假设除了数字 0 之外，这两个数都
+不会以 0 开头。
+
+输入：(2 -> 4 -> 3) + (5 -> 6 -> 4)
+输出：7 -> 0 -> 8
+原因：342 + 465 = 807
+
+两个链表从头到尾遍历，值相加向后进位，最后如果carry = 1，还需要生成值为1
+的结点。
+
+代码如下：
+package linkedlist;
+
+public class Main0002AddTwoNumbers {
+	public static void main(String[] args) {
+		ListNode l1 = new ListNode(2);
+		ListNode node1 = new ListNode(4);
+		ListNode node2 = new ListNode(3);
+		ListNode l2 = new ListNode(5);
+		ListNode node3 = new ListNode(6);
+		ListNode node4 = new ListNode(4);
+		l1.next = node1;
+		node1.next = node2;
+		l2.next = node3;
+		node3.next = node4;
+		ListNode node = new Solution2().addTwoNumbers(l1, l2);
+		while (node != null) {
+			System.out.print(node.val + "  ");
+			node = node.next;
+		}
+	}
+}
+
+class Solution2 {
+	public ListNode addTwoNumbers(ListNode l1, ListNode l2) {
+		ListNode dummy = new ListNode(0);
+		ListNode cur = dummy;
+		int carry = 0;
+		while (l1 != null || l2 != null) {
+			int num1 = l1 != null ? l1.val : 0;
+			int num2 = l2 != null ? l2.val : 0;
+			carry = num1 + num2 + carry;
+			cur.next = new ListNode(carry % 10);
+			cur = cur.next;
+			carry /= 10;
+			l1 = l1 != null ? l1.next : null;
+			l2 = l2 != null ? l2.next : null;
+		}
+		if (carry == 1)
+			cur.next = new ListNode(1);
+		return dummy.next;
+	}
+}
