@@ -1,0 +1,39 @@
+Leetcode  518
+换钱的方法数（Coins ChangeⅡ）
+  给定不同面额的硬币和一个总金额。写出函数来计算可以凑成总金额的硬币组合数。
+假设每一种面额的硬币有无限个。 
+
+输入：amount = 5, coins = [1, 2, 5]
+输出：4
+解释：有四种方式可以凑成总金额:
+5=5
+5=2+2+1
+5=2+1+1+1
+5=1+1+1+1+1
+
+代码如下：
+package dynamicprogram;
+
+public class Main0518CoinChangeⅡ {
+	public static void main(String[] args) {
+		int[] arr = { 1, 5, 11 };
+		int amount = 15;
+		System.out.println(new Solution518().change(arr, amount));
+	}
+}
+
+class Solution518 {
+	public int change(int[] coins, int amount) {
+		int[] dp = new int[amount + 1];
+
+		dp[0] = 1;
+		for (int i = 0; i < coins.length; i++) {
+			for (int j = 0; j < dp.length; j++) {
+				if (j >= coins[i])
+					dp[j] += dp[j - coins[i]];
+			}
+		}
+
+		return dp[amount];
+	}
+}
