@@ -1,0 +1,88 @@
+Leetcode  300
+最长递增子序列（Longest Increasing Subsequence）
+给定一个无序的整数数组，找到其中最长上升子序列的长度。
+
+输入: [10,9,2,5,3,7,101,18]
+输出: 4 
+解释: 最长的上升子序列是 [2,3,7,101]，它的长度是 4。
+
+时间复杂度O(N²)：
+1. 生成长度为N的数组dp，dp[i]表示以arr[i]这个数结尾的情况下，arr[0..i]中的
+    最大递增子序列长度；
+2. 对于第 i 个数，首先让dp[i] = 1，接下来从 0 到 i - 1依次算出以第 i 个位置数
+    结尾的递增子序列长度；
+3. 计算到dp[i]，首先置1。如果最长递增子序列以arr[i]结尾，那么在arr[0..i - 1]
+    中所有比arr[i]小的数都可以作为倒数第二个数。在这么多倒数第二个数的选
+    择中，以哪个数结尾的最大递增子序列更大，就选哪个数作为倒数第二个数，
+    所以dp[i] = max{dp[j] + 1 (0 <= j < i)，arr[j] < arr[i]}。
+4. 返回最长递增子序列：从右往左遍历dp数组，如果对于一个位置i，既有
+    arr[i] < arr[len]，又有dp[i] = dp[len] - 1，说明arr[i]可以作为递增子序列倒数
+    第二个数字。
+时间复杂度O(nlogn)：
+二分法。
+
+代码如下：
+package dynamicprogram;
+
+import java.util.Arrays;
+
+public class Main0300LongestIncreasingSubsequence {
+	public static void main(String[] args) {
+		int[] arr = { 2, 1, 5, 3, 6, 4, 8, 9, 7 };
+		int[] lis = new Solution300().lengthOfLIS(arr);
+		System.out.println(Arrays.toString(lis));
+	}
+}
+
+class Solution300 {
+	public int[] lengthOfLIS(int[] nums) {
+		int[] dp = new int[nums.length];
+
+		int len = 0;
+		for (int i = 0; i < dp.length; i++) {
+			dp[i] = 1;
+			for (int j = 0; j < i; j++) {
+				if (nums[i] > nums[j])
+					dp[i] = Math.max(dp[i], dp[j] + 1);
+			}
+			len = Math.max(len, dp[i]);
+		}
+		
+		// 返回最长递增子序列
+		int[] result = new int[len];
+		for (int i = dp.length - 1; i >= 0; i--) {
+			if (dp[i] == len) {
+				len--;
+				result[len] = nums[i];
+			}
+		}
+		return result;
+	}
+}
+
+class Solution0300 {
+	public int lengthOfLIS(int[] nums) {
+		if (nums.length == 0)
+			return 0;
+		int[] ends = new int[nums.length];
+		ends[0] = nums[0];
+		int right = 0;
+		int max = 0;
+		for (int i = 0; i < nums.length; i++) {
+			int l = 0;
+			int r = right;
+			while (l <= r) {
+				int m = (l + r) / 2;
+				if (nums[i] > ends[m]) {
+					l = m + 1;
+				} else {
+					r = m - 1;
+				}
+			}
+			right = Math.max(right, l);
+			ends[l] = nums[i];
+			max = Math.max(max, l + 1);
+		}
+		return max;
+	}
+}
