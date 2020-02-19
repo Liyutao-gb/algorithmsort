@@ -1,0 +1,121 @@
+Leetcode  509 70  斐波那契数、爬楼梯
+10.斐波那契数列及青蛙跳台阶问题（Fibonacci Number）
+　　写一个函数，输入n，求斐波那契（Fibonacci）数列的第n项。
+  
+a. 递归函数，但会出现很多重复计算，效率非常底，不采用。
+b. 避免重复计算，采用从下往上计算，可以把计算过了的保存起来，下次要计算
+   时就不必重复计算了：先由f(0)和f(1)计算f(2)，再由f(1)和f(2)计算f(3)……以此
+   类推就行了，计算第n个时，只要保存第n-1和第n-2项就可以了。
+
+青蛙跳台阶、爬楼梯（Climbing Stairs）
+
+题目一：一只青蛙一次可以跳上1级台阶，也可以跳上2级。求该青蛙跳上一个n级
+的台阶总共有多少种跳法。
+
+   将跳法总数记为f(n)，可以知道f(1)=1，f(2)=2。当n>2时，一是第一次跳1级的话，
+此时的跳法数目等于后面剩下的n-1阶台阶的跳法数目，即为f(n-1)；二是第一次跳2阶
+的话，此时的跳法数目等于后面剩下的n-2阶台阶的跳法数目，即为f(n-2)，所以可以
+推得 f(n)=f(n-1) + f(n-2)，即为斐波那契数列。
+
+题目二：一只青蛙一次可以跳上1级台阶，也可以跳上2级……它也可以跳上n级。
+求该青蛙跳上一个n级的台阶总共有多少种跳法。
+
+当n=1时，f(1)=1。
+　　当n大于1时，归纳总结可知：跳上n级台阶，第一次跳1级的话，有f(n-1)种方法；
+第一次跳2级的话，有f(n-2)种方法……第一次跳n-1级的话，有f(1)种方法；直接跳n级
+的话，有1种方法，所以可以得到如下公式：
+解法1：
+　　f(n) = f(n-1)+f(n-2)+......f(1)+1　　（n≥2）
+　　f(n-1) = f(n-2)+f(n-3)+.....f(1)+1　　（n>2）
+　　由上面两式相减可得，f(n)-f(n-1)=f(n-1)，即f(n) = 2*f(n-1)  (n>2)
+　　最终结合f(1)和f(2)，可以推得：f(n)=2^(n-1)
+解法2：
+　　除了必须到达最后一级台阶，第1级到第n-1级台阶都可以有选择的跳，也就是说对
+于这n-1个台阶来说，每个台阶都有跳上和不跳上2种情况，所以一共有2^(n-1)种方法。
+
+矩形覆盖问题（Matrix Overlay）
+
+题目：用n个2*1的小矩形无重叠地覆盖一个2*n的大矩形，总共有多少种方法？
+　　当n = 1时，有一种方法。
+　　当n = 2时，有两种方法。
+　　当n >= 3时，和斐波那契数列类似。第一步竖着放，有f(n-1)种方法；第一步横着放，
+有f(n-2)种方法。所以f(n)=f(n-1)+f(n-2)。
+
+母牛问题（Cow Problem）
+题目：假设农场中成熟的母牛每年只会生1头小母牛，并且永远不会死。第一年农
+场有1只成熟的母牛，从第二年开始，母牛开始生小母牛。每只小母牛3年之后成熟又
+可以生小母牛。给定整数N，求出N年后牛的数量。
+
+第一年开始往后：1，2，3，4，6，9，13，19.....
+if (N == 1 || N == 2 || N == 3 || N == 4)	return N;
+return	f(n) = f(n - 1)  + f(n - 3);
+
+
+代码如下：
+package dynamicprogram;
+
+public class Main0509FibonacciNumber {
+	public static void main(String[] args) {
+		System.out.println(new Solution0509().fib(3));
+	}
+}
+
+class Solution0509 {
+	public int fib(int N) {
+		if (N < 1)
+			return 0;
+		if (N == 1 || N == 2)
+			return 1;
+		int first = 0, second = 1, third = 1;
+		for (int i = 3; i <= N; i++) {
+			first = second + third;
+			third = second;
+			second = first;
+		}
+		return first;
+	}
+}
+
+class Solution509 {
+	public int fib(int N) {
+		if (N == 0)
+			return 0;
+		if (N == 1)
+			return 1;
+		return fib(N - 1) + fib(N - 2);
+	}
+}
+
+package dynamicprogram;
+
+public class Main0070ClimbingStairs {
+	public static void main(String[] args) {
+		System.out.println(new Solution70().climbStairs(3));
+	}
+}
+
+class Solution70 {
+	public int climbStairs(int n) {
+		if(n == 1)
+			return 1;
+		if (n == 2)
+			return 2;
+		int first = 0, second = 2, third = 1;
+		for (int i = 3; i <= n; i++) {
+			first = second + third;
+			third = second;
+			second = first;
+		}
+		return first;
+	}
+}
+
+class Solution070 {
+	public int climbStairs(int n) {
+		if(n < 1)
+			return 0;
+		if (n == 2 || n == 1)
+			return n;
+		return climbStairs(n - 1) + climbStairs(n - 2);
+	}
+}
