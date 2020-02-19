@@ -1,0 +1,72 @@
+Leetcode  232  用栈实现队列
+9. （1）用两个栈实现一个队列（Implement Queue Using Stacks）
+有两个栈stack1和stack2。push()、pop()
+
+1. 添加元素是往一个栈stack1中一直插入；
+2. 删除元素
+    ①当stack2中还有元素，直接弹出stack2中的元素；
+    ② 当stack2中没元素时，stack1中的所有元素都必须压入stack2中。
+
+代码如下：
+package com.lyt.java;
+
+import java.util.Stack;
+
+public class Offer09_QueueWithTwoStacks {
+	class Queue {
+		Stack<Integer> stack1 = new Stack<Integer>();
+		Stack<Integer> stack2 = new Stack<Integer>();
+
+		public void add(int node) {
+			stack1.push(node);
+		}
+
+		public int poll() {
+			if (stack1.empty() && stack2.empty()) {
+				throw new RuntimeException("Queue is empty.");
+			}
+			if (stack2.empty()) {
+				while (!stack1.empty()) {
+					stack2.push(stack1.pop());
+				}
+			}
+			return stack2.pop();
+		}
+
+		public int peek() {
+			if (stack1.isEmpty() && stack2.isEmpty()) {
+				throw new RuntimeException("Queue is empty.");
+			}
+			if (stack2.isEmpty()) {
+				while (!stack1.isEmpty()) {
+					stack2.push(stack1.pop());
+				}
+			}
+			return stack2.peek();
+		}
+	}
+
+	public void test1() {
+		Queue queue = new Queue();
+		queue.add(1);
+		queue.add(2);
+		System.out.println(queue.poll());
+		queue.add(3);
+		System.out.println(queue.poll());
+		System.out.println(queue.poll());
+	}
+
+	/**
+	 * 往空队列删除元素
+	 */
+	public void test2() {
+		Queue queue = new Queue();
+		System.out.println(queue.poll());
+	}
+
+	public static void main(String[] args) {
+		Offer09_QueueWithTwoStacks demo = new Offer09_QueueWithTwoStacks();
+		demo.test1();
+		demo.test2();
+	}
+}
