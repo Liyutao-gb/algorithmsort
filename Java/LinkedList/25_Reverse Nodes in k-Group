@@ -1,11 +1,5 @@
 package linkedlist;
 
-// 25K个一组翻转链表、206反转链表、92反转链表Ⅱ
-public class Main0025K个一组翻转链表 {
-	public static void main(String[] args) {
-		
-	}
-}
 
 // 头结点0        1 -> 2 -> 3 	-> 4 	k=3
 //   pre       start 	  end 	 newNext
