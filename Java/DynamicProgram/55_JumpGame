@@ -1,0 +1,36 @@
+Leetcode  55
+跳跃游戏（Jump Game）
+给定一个非负整数数组，你最初位于数组的第一个位置。数组中的每个元素代表你在
+该位置可以跳跃的最大长度。判断你是否能够到达最后一个位置。
+
+输入: [2,3,1,1,4]
+输出: true
+解释: 我们可以先跳 1 步，从位置 0 到达 位置 1, 然后再从位置 1 跳 3 步到达最后
+   一个位置。
+
+挨着跳：
+1. 如果某一个作为 起跳点 的格子可以跳跃的距离是 3，那么表示后面 3 个格子
+    都可以作为 起跳点。
+2. 可以对每一个能作为 起跳点 的格子都尝试跳一次，把能跳到最远的距离 不断
+    更新。
+3. 如果可以一直跳到最后，就成功了。
+
+代码如下：
+package dynamicprogram;
+
+public class Main0055JumpGame {
+	public static void main(String[] args) {
+		System.out.println(new Solution55().canJump(new int[] { 2, 3, 1, 1, 4 }));
+	}
+}
+class Solution55 {
+	public boolean canJump(int[] nums) {
+		int position = 0;
+		for (int i = 0; i < nums.length; i++) {
+			if (i > position)	// 说明跳不到当前i的位置
+				return false;
+			position = Math.max(position, nums[i] + i);
+		}
+		return true;
+	}
+}
