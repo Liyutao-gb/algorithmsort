@@ -1,0 +1,71 @@
+Leetcode  141 142  环形链表、环形链表Ⅱ
+23.链表中环的入口结点（Linked List Cycle）
+    一个链表中包含环，如何找出环的入口结点？
+    
+输入：head = [3,2,0,-4], pos = 1	
+输出：true
+解释：链表中有一个环，其尾部连接到第二个节点。
+
+1. 是否有环
+用两个指针，同时从链表的头结点出发，一个指针一次走一步，另一个指针一
+次走两步。如果走得快的指针追上了走的慢的指针，那么链表就包含环。如果走的
+快的指针走到了链表的末尾都没有追上第一个指针，那么链表就不包含环。
+
+输入：head = [3,2,0,-4], pos = 1
+输出：tail connects to node index 1
+解释：链表中有一个环，其尾部连接到第二个节点。
+
+2. 环入口结点
+a. 已知n（环结点个数），先让指针P1在链表上向前移动n步，然后两个指针
+    以相同的速度向前移动。当第二个指针指向环入口结点时，第一个指针围绕
+    着环走了一圈，和第二个指针指向同一个入口结点。
+b. 未知n（环结点个数），先让指针P1和P2以相同速度向前移动，当P1和P2
+    在环中相遇时，让P1结点重新指向链表头结点，再让P1和P2以相同速度向
+    前移动，当P1和P2指针指向同一节点时，即为环入口节点。
+
+
+代码如下：
+
+class Solution141 {
+	public boolean hasCycle(ListNode head) {
+		if (head == null || head.next == null)
+			return false;
+		
+		ListNode p1 = head;
+		ListNode p2 = head;
+		while (p2 != null && p2.next != null) {
+			p1 = p1.next;
+			p2 = p2.next.next;
+			if (p1 == p2) {
+				return true;
+			}
+		}
+		return false;
+	}
+}
+
+class Solution142 {
+	public ListNode detectCycle(ListNode head) {
+		if (head == null || head.next == null)
+			return null;
+
+		ListNode p1 = head;// p1和p2必须都指向头节点
+		ListNode p2 = head;
+		while (p2.next != null && p2.next.next != null) {
+			p1 = p1.next;
+			p2 = p2.next.next;
+			if (p1 == p2) {
+				break;
+			}
+		}
+		if (p2.next == null || p2.next.next == null) {
+			return null;
+		}
+		p1 = head;
+		while (p1 != p2) {
+			p1 = p1.next;
+			p2 = p2.next;
+		}
+		return p1;
+	}
+}
