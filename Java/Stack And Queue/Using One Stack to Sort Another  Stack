@@ -1,0 +1,54 @@
+程序员代码面试指南（第2版）
+用一个栈实现另一个栈的排序（Using One Stack to Sort Another 
+Stack）
+一个栈中元素的类型为整形，现在想将该栈从顶到底按从大到小的顺序排序，只
+许申请一个栈。
+被排序栈stack，stack弹出的值val，辅助栈help。
+
+help中的元素从顶到底要从小到大。
+1. 如果值val <= help的栈顶元素，则将val直接压入help；
+2. 如果值val > help的栈顶元素，则将help的元素逐一弹出，逐一压入stack，直
+    到val <= help的栈顶元素，再将val压入help。
+3. 当stack栈中全部元素压入help中，将help元素压入stack中，即排序完成。
+
+
+代码如下：
+package stack;
+
+import java.util.Stack;
+
+public class UsingOneStackToSortAnotherStack {
+	public static void main(String[] args) {
+		Stack<Integer> stack = new Stack<>();
+		stack.push(2);
+		stack.push(1);
+		stack.push(3);
+		useStackToSortAnotherStack(stack);
+		for (Integer i : stack) {
+			System.out.print(i + " ");
+		} 
+	}
+	
+	/**
+	 * 排序栈stack，使得从栈顶到栈底从大到小排列
+	 * help中从栈顶到栈底从小到大排
+	 */
+	public static Stack<Integer> useStackToSortAnotherStack(Stack<Integer> stack) {
+		if (stack.empty())
+			return new Stack<>();
+		
+		Stack<Integer> helper = new Stack<>();
+		while (!stack.isEmpty()) {
+			int val = stack.pop();
+			while (!helper.isEmpty() && val > helper.peek()) {
+				stack.push(helper.pop());
+			}
+			helper.push(val);
+		}
+		
+		while (!helper.isEmpty()) {
+			stack.push(helper.pop());
+		}
+		return stack;
+	}
+}
