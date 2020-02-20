@@ -1,0 +1,48 @@
+61.扑克牌的顺子
+从扑克牌中随机抽5张牌，判断是不是一个顺子，即这5张牌是不是连续的。2～10
+为数字本身，A为1，J为11，Q为12，K为13，而大、小王可以看成任意数字。
+前提：大小王看成0。
+
+1.Array.sort(arr)；
+2.统计数组中0的个数；
+3.统计排序之后的数组中相邻数字之间的空缺总数。
+最后 返回0的个数 >= 空缺总数 的布尔值。
+注：记得判断相邻数字是否相等，如果相等，说明不是顺子。
+
+代码如下：
+package com.lyt.java;
+
+import java.util.Arrays;
+
+public class Offer61_ContinousCards {
+	public boolean isContinuous(int[] numbers) {
+		if (numbers == null || numbers.length <= 0)
+			throw new RuntimeException("数组不合法");
+
+		Arrays.sort(numbers);
+		int numberOf0 = 0;
+		int numberOfGap = 0;
+		// 1.统计0(大、小王)的个数 
+		for (int i : numbers) {
+			if (i == 0)
+				numberOf0++;
+		}
+
+		int small = numberOf0;
+		int big = numberOf0 + 1;
+		while (big < numbers.length) {
+			if (numbers[small] == numbers[big]) // 数组中不能有相等数字
+				return false;
+			numberOfGap += numbers[big++] - numbers[small++] - 1;
+		}
+
+		return numberOf0 >= numberOfGap; // 0的个数 >= gap间隙数
+	}
+
+	public static void main(String[] args) {
+		Offer61_ContinousCards demo = new Offer61_ContinousCards();
+		int[] arr = new int[] { 0, 1, 3, 4, 5 };
+		boolean continuous = demo.isContinuous(arr);
+		System.out.println(continuous);
+	}
+}
