@@ -1,0 +1,88 @@
+Leetccode  572  另一个树的子树（Subtree of Another Tree）
+26.树的子结构（Substructure of Another Tree）
+输入两棵二叉树A和B，判断B是不是A的子结构(含有即可)。
+
+1）先对A树进行遍历，找到与B树的根结点值相同的结点R；
+2）判断A树中以R为根结点的子树是否包含B树一样的结构。
+输入： s			输入： t
+      3					   4
+    /  \				  /  \
+   4    5				 1    2
+  /  \
+ 1    2
+     /
+    0
+输出：true，因为 t 与 s 的一个子结构拥有相同的结构和节点值。
+子结构判定： if（root2 == null）  return true;
+ 	if（root1 == null）  return false;
+
+输入：s			输入 t：
+     3					   4 
+    /  \				  /  \
+   4    5				 1    2
+  /  \
+ 1    2
+输出： true，因为 t 与 s 的一个子树拥有相同的结构和节点值。
+子树判定：if（root1 == null && root2 == null） return true;
+    	 if（root1 == null || root2 == null）  return false;
+
+注：本题相当于对二叉树遍历的拓展，操作过程中，注意null的处理。
+
+代码如下：
+// 另一棵树的子树
+class Solution {
+    public boolean isSubtree(TreeNode s, TreeNode t) {
+		if (s == null || t == null)
+			return false;
+		return isSame(s, t) || isSubtree(s.left, t) || isSubtree(s.right, t);
+	}
+
+	public boolean isSame(TreeNode s, TreeNode t) {
+		if (s == null && t == null)
+			return true;
+		if (s == null || t == null)
+			return false;
+		if(s.val != t.val)
+			return false;
+		return isSame(s.left, t.left) && isSame(s.right, t.right);
+	}
+}
+
+
+// 另一棵树的子结构
+package com.lyt.java;
+
+public class Offer26_SubstructureInTree {
+	public class TreeNode {
+		double val;
+		TreeNode left = null;
+		TreeNode right = null;
+
+		public TreeNode(int val) {
+			this.val = val;
+		}
+	}
+
+	/**
+	 * 主程序，对每个结点遍历判断
+	 */
+	public boolean hasSubtree(TreeNode root1, TreeNode root2) {
+		if (root1 == null || root2 == null)
+			return false;
+		return doesTree1HasTree2(root1, root2) || hasSubtree(root1.left, root2) || hasSubtree(root1.right, root2);
+	}
+
+	/**
+	 * 判断root结点开始的子树中各个结点是否相同
+	 */
+	private boolean doesTree1HasTree2(TreeNode root1, TreeNode root2) {
+		if (root2 == null) // root2下面无结点,不用继续往下判断了,返回即可
+			return true;
+		if (root1 == null)
+			return false;
+		if (root1.val != root2.val)
+			return false;
+		return doesTree1HasTree2(root1.left, root2.left) && doesTree1HasTree2(root1.right, root2.right);
+	}
+}
+
