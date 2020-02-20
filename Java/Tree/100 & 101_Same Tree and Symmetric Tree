@@ -1,0 +1,77 @@
+Leetcode  101 100  对称二叉树、相同的树
+28.对称二叉树（Symmetric Tree）
+请实现一个函数，用来判断一棵二叉树是不是对称的。如果一棵二叉树和它的镜像
+一样，那么它是对称的。
+输入：
+      1
+     /  \
+   2     2
+ /   \  /  \
+3    4 4    3
+输出：true
+
+a. 递归版本(根节点的左右子树看成两棵树)；
+b. 迭代版本(结点存储到队列，每次取两个进行判断)。
+
+
+代码如下：
+package com.lyt.java;
+
+import java.util.LinkedList;
+import java.util.Queue;
+
+public class Offer28_SymmetricalBinaryTree {
+	public class TreeNode {
+		int val;
+		TreeNode left = null;
+		TreeNode right = null;
+
+		public TreeNode(int val) {
+			this.val = val;
+		}
+	}
+	
+	/**
+	 * 1.根节点为空,默认是对称的;
+	 * 2.根节点不为空。
+	 */
+	public boolean isSymmetrical(TreeNode pRoot) {
+		if (pRoot == null)
+			return true;
+		return isEqual(pRoot.left, pRoot.right);
+	}
+
+	private boolean isEqual(TreeNode pRoot1, TreeNode pRoot2) {
+		if (pRoot1 == null && pRoot2 == null)
+			return true;
+		if (pRoot1 == null || pRoot2 == null)
+			return false;
+		if(pRoot1.val != pRoot2.val)
+			return false;
+		return isEqual(pRoot1.left, pRoot2.right) && isEqual(pRoot1.right, pRoot2.left);
+	}
+	
+	// 迭代
+	public boolean isSymmetric(TreeNode root) {
+		if(root == null)
+			return true;
+		Queue<TreeNode> queue = new LinkedList<>();
+		queue.add(root.left);
+		queue.add(root.right);
+		while (!queue.isEmpty()) {
+			TreeNode root1 = queue.poll();
+			TreeNode root2 = queue.poll();
+			if (root1 == null && root2 == null)
+				continue;
+			if (root1 == null || root2 == null)
+				return false;
+			if (root1.val != root2.val)
+				return false;
+			queue.add(root1.left);
+			queue.add(root2.right);
+			queue.add(root1.right);
+			queue.add(root2.left);
+		}
+		return true;
+	}
+}
