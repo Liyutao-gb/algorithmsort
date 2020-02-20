@@ -1,0 +1,88 @@
+Leetcode  112 113  路径总和、路径总和Ⅱ
+34.二叉树中和为某一值的路径（Path Sum）
+输入一棵二叉树和一个整数，打印出二叉树中结点值的和为输入整数的所有路径。
+从树的根结点开始往下一直到叶结点所经过的结点形成一条路径。
+输入： sum = 22，
+               5
+              /  \
+            4     8
+           /    /   \
+         11    13   4
+        /  \     \
+       7   2      1
+输出：true
+解释：因为存在目标和为 22 的根节点到叶子节点的路径 5->4->11->2。
+
+前序遍历。
+1. 假设找到其中一条路径，到达叶子结点后，由于没有指向父结点的指针，提前
+    创建一个集合存储前面经过的结点；
+　　2. 当前路径是否为目标路径判定条件：当前为叶子结点（结点左右子节点为null）
+   并且 sum = 0；
+　　3. 利用集合存储结点，在该结点完成左右子树的路径搜索后，要删除该结点，
+    记录别的路径。
+
+扩展：路径总和Ⅱ。找到树中所有符合条件的路径放到List<List<Integer>>集合
+ 	  中，然后List<Integer>再放到List<List<Integer>>中。
+
+代码如下：
+package com.lyt.java;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public class Offer34_PathInTree {
+	public class TreeNode {
+		int val;
+		TreeNode left;
+		TreeNode right;
+
+		public TreeNode(int val) {
+			this.val = val;
+		}
+	}
+
+	/**
+	 * 给定一个二叉树和一个目标和，判断该树中是否存在根节点到叶子节点的路径，这条路径
+	 * 上所有节点值相加等于目标和。
+	 * 说明: 叶子节点是指没有子节点的节点。
+	 */
+	public boolean hasPathSum(TreeNode root, int sum) {
+		if (root == null)
+			return false;
+		sum -= root.val;
+		if (sum == 0 && root.left == null && root.right == null)
+			return true;
+		return hasPathSum(root.left, sum) || hasPathSum(root.right, sum);
+	}
+
+	/**
+	 * 1.假设找到了其中一条路径，达到叶结点后，由于没有指向父结点的指针，所以必须提前
+	 * 创建一个链表存储前面经过的结点。
+	 * 2.由于是从根结点出发，所以要想到使用前序遍历 
+	 * 3.利用链表存储结点，在该结点完成左右子树的路径搜索后（即递归函数结束，返回到其
+	 * 父结点之前），要删除该结点，从而记录别的路径。
+	 */
+	public void findPath(TreeNode root, int target) {
+		if (root == null)
+			return;
+
+		List<Integer> list = new ArrayList<>();
+		printPath(root, target, list);
+	}
+
+	private void printPath(TreeNode node, int target, List<Integer> list) {
+		if (node == null)
+			return;
+
+		list.add(node.val);
+		target -= node.val;
+		if (target == 0 && node.left == null && node.right == null) {
+			for (int i : list)
+				System.out.print(i + " ");
+			System.out.println();
+		}
+		printPath(node.left, target, list);
+		printPath(node.right, target, list);
+		list.remove(list.size() - 1);
+	}
+}
