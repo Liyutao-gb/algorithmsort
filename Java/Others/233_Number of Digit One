@@ -1,0 +1,73 @@
+Leetcode  233  数字1的个数
+43.从1到n整数中1出现的次数
+输入一个整数n，求从1到n这n个整数的十进制表示中1出现的次数。例如输入12，
+从1到12这些整数中包含1 的数字有1，10，11和12，1一共出现了5次。
+
+对于整数n，我们将这个整数分为三部分：当前位数字cur，更高位数字high，更低位
+数字low，如：对于n=21034，当位数是十位时，cur=3，high=210，low=4。
+我们从个位到最高位 依次计算每个位置出现1的次数：
+　　1）当前位的数字等于0时，例如n=21034，在百位上的数字cur=0，百位上是1的
+情况有：00100~00199，01100~01199，……，20100~20199。一共有21*100种情况，
+即high*100;
+　　2）当前位的数字等于1时，例如n=21034，在千位上的数字cur=1，千位上是1的
+情况有：01000~01999，11000~11999，21000~21034。一共有2*1000+（34+1）种
+情况，即high*1000+(low+1)。
+　　3）当前位的数字大于1时，例如n=21034，在十位上的数字cur=3，十位上是1的
+情况有：00010~00019，……，21010~21019。一共有（210+1）*10种情况，即
+(high+1)*10。
+　　时间复杂度为O(logn)
+
+
+代码如下：
+package com.lyt.java;
+
+public class Offer43_NumberOf1 {
+	/**
+	 * 解法一：普通解法
+	 */
+	public int numberOf1Between1AndN_Solution1(int n) {
+		int count = 0;
+		for (int i = 1; i <= n; i++) {
+			count += NumberOf1(i);
+		}
+		return count;
+	}
+	
+	private int NumberOf1(int n) {
+		int count = 0;
+		while (n != 0) {
+			if(n % 10 == 1)
+				count++;
+			n /= 10;
+		}
+		return count;
+	}
+	
+	/**
+	 * 解法二：找规律
+	 */
+	public int numberOf1Between1AndN_Solution2(int n) {
+		int count = 0;
+		for (long i = 1; i <= n; i *= 10) { // i代表第几位数
+			long high = n / (i * 10);// 高位数字
+			long cur = (n / i) % 10; // 当前位数字
+			long low = n % i; 		// 低位数字
+			if (cur == 0) {		
+				count += high * i;
+			} else if (cur == 1) {
+				count += high * i + (low + 1);
+			} else {
+				count += (high + 1) * i;
+			}
+		}
+		return count;
+	}
+	
+	public static void main(String[] args) {
+		Offer43_NumberOf1 demo = new Offer43_NumberOf1();
+		int i1 = demo.numberOf1Between1AndN_Solution2(12);
+		int i2 = demo.numberOf1Between1AndN_Solution1(12);
+		System.out.println(i1 == 5);
+		System.out.println(i2 == 5);
+	}
+}
