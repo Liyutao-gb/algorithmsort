@@ -1,0 +1,106 @@
+8.二叉树的下一个结点（Next Node in Binary Tree）
+给定一棵二叉树和其中的一个结点，如何找出中序遍历顺序的下一个结点？ 树中
+的结点除了有两个分别指向左右子结点的指针以外，还有一个指向父结点的指针。
+
+输入：  3
+     4
+    /    
+   1      
+ /  \
+2    3
+输出：4，节点3的下一个结点是4。
+
+1. 若当前结点有右子树时，其下一个结点为右子树中最左子结点；
+2. 若当前结点无右子树
+（1）若当前结点为其父结点的左子结点时，其下一个结点为其父结点；
+（2）若当前结点为其父结点的右子结点时，继续向上遍历父结点的父结点，直到
+  找到一个结点是其父结点的左子结点，该结点即为下一结点。
+
+
+代码如下：
+package com.lyt.java;
+
+public class Offer08_NextNodeInBinaryTrees {
+	private class TreeLinkNode {
+		int val;
+		TreeLinkNode left;
+		TreeLinkNode right;
+		TreeLinkNode parent;
+
+		TreeLinkNode(int val) {
+			this.val = val;
+		}
+	}
+
+	/**
+	 * 1.节点有右子树结点;
+	 * 2.节点无右子树结点,分两种情况：(1)没有父结点；(2)有父结点
+	 */
+	public TreeLinkNode getNext(TreeLinkNode pNode) {
+		if (pNode == null) 
+			return null;
+		
+		if (pNode.right != null) {
+			pNode = pNode.right;
+			while (pNode.left != null)
+				pNode = pNode.left;
+			return pNode;
+		}
+		while (pNode.parent != null) {	// 循环找到一个结点是其父结点的左子结点
+			if (pNode == pNode.parent.left)
+				return pNode.parent;
+			pNode = pNode.parent;
+		}
+		return null;
+	}
+
+	public void test1() {
+		TreeLinkNode node = null;
+		TreeLinkNode nextNode = getNext(node);
+		if (nextNode != null)
+			System.out.println(nextNode.val);
+		else
+			System.out.println("无下一结点");
+	}
+
+	public void test2() {
+		TreeLinkNode node1 = new TreeLinkNode(1);
+		TreeLinkNode node2 = new TreeLinkNode(2);
+		TreeLinkNode node3 = new TreeLinkNode(3);
+		TreeLinkNode node4 = new TreeLinkNode(4);
+		node1.left = node2;
+		node1.right = node3;
+		node2.parent = node1;
+		node3.parent = node1;
+		node4.left = node1;
+		node1.parent = node4;
+		TreeLinkNode nextNodeOf1 = getNext(node1);
+		TreeLinkNode nextNodeOf2 = getNext(node2);
+		TreeLinkNode nextNodeOf3 = getNext(node3);
+		TreeLinkNode nextNodeOf4 = getNext(node4);
+		if (nextNodeOf1 != null)
+			System.out.println("1结点的下一个结点值为：" + nextNodeOf1.val);
+		else
+			System.out.println("1结点无下一结点");
+		if (nextNodeOf2 != null)
+			System.out.println("2结点的下一个结点值为：" + nextNodeOf2.val);
+		else
+			System.out.println("2结点无下一结点");
+		if (nextNodeOf3 != null)
+			System.out.println("3结点的下一个结点值为：" + nextNodeOf3.val);
+		else
+			System.out.println("3结点无下一结点");
+		if (nextNodeOf4 != null)
+			System.out.println("4结点的下一个结点值为：" + nextNodeOf4.val);
+		else
+			System.out.println("4结点无下一结点");
+	}
+
+	public static void main(String[] args) {
+		Offer08_NextNodeInBinaryTrees demo = new Offer08_NextNodeInBinaryTrees();
+		System.out.print("test1:");
+		demo.test1();
+		System.out.print("test2:");
+		demo.test2();
+	}
+}
